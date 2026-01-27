@@ -80,7 +80,7 @@ export default function LoginPage() {
 
         <div className="text-center">
           <p className="text-sm text-gray-600">
-            Test account: test@example.com / password123
+            Test account: test@example.com / password
           </p>
         </div>
       </div>
