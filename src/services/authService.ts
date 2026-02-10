@@ -45,9 +45,14 @@ export const authService = {
   async logout(): Promise<void> {
     try {
       await api.post('/auth/logout');
+    } catch (error) {
+      console.error('Logout error:', error);
     } finally {
       localStorage.removeItem('access_token');
       localStorage.removeItem('user');
+      sessionStorage.clear();
+      delete api.defaults.headers.common['Authorization'];
+      window.location.href = '/login';
     }
   },
 
