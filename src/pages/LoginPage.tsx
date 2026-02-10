@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { authService } from '@/services/authService';
+import { getErrorMessage } from '@/lib/errorHandler';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -67,9 +68,7 @@ export default function LoginPage() {
             {loginMutation.isError && (
               <Alert variant="destructive">
                 <AlertDescription>
-                  {loginMutation.error instanceof Error 
-                    ? loginMutation.error.message 
-                    : 'Login failed. Please check your credentials.'}
+                  {getErrorMessage(loginMutation.error)}
                 </AlertDescription>
               </Alert>
             )}
