@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { getErrorMessage } from '@/lib/errorHandler';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -38,7 +39,7 @@ export default function UsersTab() {
       resetForm();
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to create user');
+      toast.error(getErrorMessage(error));
       console.error('Create user error:', error);
     },
   });
@@ -52,7 +53,7 @@ export default function UsersTab() {
       resetForm();
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to update user');
+      toast.error(getErrorMessage(error));
       console.error('Update user error:', error);
     },
   });
@@ -64,7 +65,7 @@ export default function UsersTab() {
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to delete user');
+      toast.error(getErrorMessage(error));
       console.error('Delete user error:', error);
     },
   });
@@ -98,9 +99,7 @@ export default function UsersTab() {
   };
 
   const handleDelete = (user: User) => {
-    if (confirm(`Delete user ${user.full_name}?`)) {
-      deleteMutation.mutate(user.user_id);
-    }
+    deleteMutation.mutate(user.user_id);
   };
 
   const columns: ColumnDef<User>[] = [
@@ -151,14 +150,23 @@ export default function UsersTab() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="password">Password {editingUser && '(leave blank to keep)'}</Label>
+                  <Label htmlFor="password">
+                    Password {editingUser && '(leave blank to keep)'}
+                  </Label>
                   <Input
                     id="password"
                     type="password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     required={!editingUser}
+                    minLength={8}
+                    placeholder="Minimum 8 characters"
                   />
+                  {!editingUser && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Must be at least 8 characters
+                    </p>
+                  )}
                 </div>
                 <div>
                   <Label htmlFor="role_id">Role</Label>

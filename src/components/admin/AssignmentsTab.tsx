@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getErrorMessage } from '@/lib/errorHandler';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -45,7 +46,7 @@ export default function AssignmentsTab() {
       resetForm();
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to create assignment');
+      toast.error(getErrorMessage(error));
       console.error('Create assignment error:', error);
     },
   });
@@ -59,7 +60,7 @@ export default function AssignmentsTab() {
       resetForm();
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to update assignment');
+      toast.error(getErrorMessage(error));
       console.error('Update assignment error:', error);
     },
   });
@@ -71,7 +72,7 @@ export default function AssignmentsTab() {
       queryClient.invalidateQueries({ queryKey: ['assignments'] });
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to delete assignment');
+      toast.error(getErrorMessage(error));
       console.error('Delete assignment error:', error);
     },
   });

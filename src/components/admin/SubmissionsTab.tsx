@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getErrorMessage } from '@/lib/errorHandler';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -41,7 +42,7 @@ export default function SubmissionsTab() {
       setScore('');
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to grade submission');
+      toast.error(getErrorMessage(error));
       console.error('Grade submission error:', error);
     },
   });

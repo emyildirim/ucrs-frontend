@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getErrorMessage } from '@/lib/errorHandler';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -33,7 +34,7 @@ export default function EnrollmentsTab() {
       setGrade('');
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to update grade');
+      toast.error(getErrorMessage(error));
       console.error('Update grade error:', error);
     },
   });
