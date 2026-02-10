@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getErrorMessage } from '@/lib/errorHandler';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -47,7 +48,7 @@ export default function MyCoursesTab() {
       resetForm();
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to create course');
+      toast.error(getErrorMessage(error));
       console.error('Create course error:', error);
     },
   });
@@ -61,7 +62,7 @@ export default function MyCoursesTab() {
       resetForm();
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to update course');
+      toast.error(getErrorMessage(error));
       console.error('Update course error:', error);
     },
   });
