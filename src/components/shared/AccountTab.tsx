@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { getErrorMessage } from '@/lib/errorHandler';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -44,7 +45,7 @@ export default function AccountTab() {
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to update profile');
+      toast.error(getErrorMessage(error));
       console.error('Update profile error:', error);
     },
   });
@@ -60,7 +61,7 @@ export default function AccountTab() {
       });
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to change password');
+      toast.error(getErrorMessage(error));
       console.error('Change password error:', error);
     },
   });
@@ -150,17 +151,18 @@ export default function AccountTab() {
                       required
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="new_password">New Password</Label>
-                    <Input
-                      id="new_password"
-                      type="password"
-                      value={passwordData.new_password}
-                      onChange={(e) => setPasswordData({ ...passwordData, new_password: e.target.value })}
-                      required
-                      minLength={8}
-                    />
-                  </div>
+                <div>
+                  <Label htmlFor="new_password">New Password</Label>
+                  <Input
+                    id="new_password"
+                    type="password"
+                    value={passwordData.new_password}
+                    onChange={(e) => setPasswordData({ ...passwordData, new_password: e.target.value })}
+                    required
+                    minLength={8}
+                    placeholder="Minimum 8 characters"
+                  />
+                </div>
                   <div>
                     <Label htmlFor="new_password_confirmation">Confirm New Password</Label>
                     <Input

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   flexRender,
   getCoreRowModel,
@@ -6,6 +7,16 @@ import {
 } from '@tanstack/react-table';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
@@ -15,11 +26,27 @@ interface DataTableProps<TData> {
 }
 
 export function DataTable<TData>({ columns, data, onEdit, onDelete }: DataTableProps<TData>) {
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<TData | null>(null);
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  const handleDeleteClick = (row: TData) => {
+    setItemToDelete(row);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (itemToDelete && onDelete) {
+      onDelete(itemToDelete);
+    }
+    setDeleteDialogOpen(false);
+    setItemToDelete(null);
+  };
 
   return (
     <div className="rounded-md border">
@@ -52,7 +79,7 @@ export function DataTable<TData>({ columns, data, onEdit, onDelete }: DataTableP
                         </Button>
                       )}
                       {onDelete && (
-                        <Button size="sm" variant="destructive" onClick={() => onDelete(row.original)}>
+                        <Button size="sm" variant="destructive" onClick={() => handleDeleteClick(row.original)}>
                           Delete
                         </Button>
                       )}
@@ -70,6 +97,23 @@ export function DataTable<TData>({ columns, data, onEdit, onDelete }: DataTableP
           )}
         </TableBody>
       </Table>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this item? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
