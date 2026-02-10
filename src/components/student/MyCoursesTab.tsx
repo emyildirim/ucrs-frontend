@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getErrorMessage } from '@/lib/errorHandler';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable } from '@/components/shared/DataTable';
@@ -20,7 +21,7 @@ export default function MyCoursesTab() {
       queryClient.invalidateQueries({ queryKey: ['my-courses'] });
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to drop course');
+      toast.error(getErrorMessage(error));
       console.error('Drop course error:', error);
     },
   });

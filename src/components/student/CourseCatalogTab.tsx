@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getErrorMessage } from '@/lib/errorHandler';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,7 +22,7 @@ export default function CourseCatalogTab() {
       queryClient.invalidateQueries({ queryKey: ['enrollments'] });
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to enroll');
+      toast.error(getErrorMessage(error));
       console.error('Enroll error:', error);
     },
   });
